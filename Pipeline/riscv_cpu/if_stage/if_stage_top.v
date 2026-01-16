@@ -8,7 +8,8 @@ module if_top (
     input reset,
     input pc_write,
     input if_id_write,
-
+    input branch_taken,
+    input [31:0] pc_branch,
     output [31:0] if_id_pc_plus4,
     output [31:0] if_id_instr
 );
@@ -19,13 +20,13 @@ module if_top (
 
     // PC + 4
     assign pc_plus4 = pc_curr + 32'd4;
-
+    wire [31:0] pc_next = (!branch_taken)? pc_plus4 : pc_branch ;
     // PC
     pc pc_inst (
         .clk(clk),
         .reset(reset),
         .pc_write(pc_write),
-        .pc_next(pc_plus4),
+        .pc_next(pc_next),
         .pc_curr(pc_curr)
     );
 
